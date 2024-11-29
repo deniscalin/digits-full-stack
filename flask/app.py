@@ -10,6 +10,9 @@ print('Loading app')
 # Enable CORS
 CORS(app, resources={r'/*': {'origins': '*'}})
 
+# For testing
+predictions = [1, 2, 3, 4, 5, 6, 7, 8, 9]
+
 # New route
 @app.route('/ping', methods=['GET'])
 def ping_pong():
@@ -21,6 +24,7 @@ def predict():
     request_data = request.get_json()
     print("Got this data from the front end: ", request_data)
     response_obj['message'] = 'Received your request data!'
+    response_obj['prediction'] = predictions[0]
     return jsonify(response_obj)
 
 if __name__ == '__main__':

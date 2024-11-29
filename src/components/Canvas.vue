@@ -80,6 +80,22 @@ export default {
       window.localStorage.removeItem('vue-drawing-canvas')
       alert('Strokes cleared from local storage')
     },
+    async SendForInference() {
+      try {
+        const response = await axios.post('http://127.0.0.1:5001/predict', {
+          image: this.image,
+          // You can include additional data if needed
+        })
+
+        // Handle the successful response (e.g., show a success message)
+        console.log('Image sent for inference successfully:', response.data)
+        alert('Image sent for inference successfully')
+      } catch (error) {
+        // Handle errors (e.g., show an error message)
+        console.error('Error sending image:', error)
+        alert('Failed to send image. Please try again.')
+      }
+    },
   },
 }
 </script>
@@ -118,6 +134,7 @@ export default {
           >, y-axis: <strong>{{ y }}</strong>
         </p>
         <div class="button-container">
+          <button type="button" @click="SendForInference">Get prediction</button>
           <button type="button" @click.prevent="disabled = !disabled">
             <svg
               xmlns="http://www.w3.org/2000/svg"
