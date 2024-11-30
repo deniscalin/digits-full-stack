@@ -113,12 +113,12 @@ layers = loaded_model['patched_layers']
 
 
 # # Set BatchNorm layers to inference mode
-for layer in layers:
-    if isinstance(layer, BatchNorm1d):
-        print(layer)
-        layer.training = False
-        print("Set BatchNorm1D training to false")
-    print(layer)
+# for layer in layers:
+#     if isinstance(layer, BatchNorm1d):
+#         print(layer)
+#         layer.training = False
+#         print("Set BatchNorm1D training to false")
+#     print(layer)
 
 # model_obj = {'patched_layers': layers}
 
@@ -143,13 +143,16 @@ def inference_function(x_batch):
     probs = F.softmax(x_batch, dim=-1)
     print('Probabilities: ', probs)
     # ix = probs.argmax()
-    ix = torch.multinomial(probs, num_samples=1, replacement=True, generator=g)
+    # ix = torch.multinomial(probs, num_samples=1, replacement=True, generator=g)
+    ix = probs.argmax()
+    # print("INSIDE DIGIT_RECOG_MODEL. ix: ", ix)
+    # print("INSIDE DIGIT_RECOG_MODEL. ix shape: ", ix.shape)
     # print("probs shape: ", probs.shape)
     # print("ix shape: ", ix.shape)
     # print("ix: ", ix)
     conf_score = probs[0][ix]
     # print("conf_score shape: ", conf_score.shape)
-    ix = ix[0][0].item()
-    conf_score = conf_score[0][0].item() * 100 
+    ix = ix.item()
+    conf_score = conf_score.item() * 100 
     # print("Prediction: ", ix)
     return ix, conf_score

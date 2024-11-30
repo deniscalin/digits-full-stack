@@ -38,6 +38,7 @@ export default {
       watermark: null,
       additionalImages: [],
       prediction: null,
+      confidence_score: null,
     }
   },
   mounted() {
@@ -90,6 +91,7 @@ export default {
 
         // Handle the successful response
         this.prediction = response.data.prediction
+        this.confidence_score = response.data.conf_score
         console.log('Sent image for prediction')
         console.log('Received prediction:', response.data)
         // alert('Image sent for inference successfully')
@@ -102,6 +104,7 @@ export default {
     resetCanvas() {
       this.$refs.VueCanvasDrawing.reset()
       this.prediction = null
+      this.confidence_score = null
       this.image = null
     },
   },
@@ -378,6 +381,9 @@ export default {
         <img :src="image" style="border: solid 1px #000000" />
         <div v-if="prediction">
           <p>Prediction for this digit: {{ prediction }}</p>
+        </div>
+        <div v-if="confidence_score">
+          <p>Condidence score for this prediciton: {{ confidence_score }}</p>
         </div>
       </div>
     </div>

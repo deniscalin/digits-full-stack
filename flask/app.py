@@ -18,7 +18,7 @@ def base64_to_bytes(base64_str, output_file_path = None):
 
     if base64_str.startswith(header):
         base64_str = base64_str[len(header):]
-    print("String with removed header: ", base64_str)
+    # print("String with removed header: ", base64_str)
     
     img_bytes = base64.b64decode(base64_str)
 
@@ -49,8 +49,8 @@ def predict():
     response_obj = {'status': 'success'}
     response_obj['message'] = 'Received your request data!'
     # Return a prediction
-    response_obj['prediction'] = ix
-    response_obj['conf_score'] = conf_score
+    response_obj['prediction'] = str(ix)
+    response_obj['conf_score'] = f"{conf_score:.2f}"
     return jsonify(response_obj)
 
 if __name__ == '__main__':
