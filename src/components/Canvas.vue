@@ -37,6 +37,7 @@ export default {
       backgroundImage: null,
       watermark: null,
       additionalImages: [],
+      prediction: null,
     }
   },
   mounted() {
@@ -87,14 +88,21 @@ export default {
           // You can include additional data if needed
         })
 
-        // Handle the successful response (e.g., show a success message)
-        console.log('Image sent for inference successfully:', response.data)
-        alert('Image sent for inference successfully')
+        // Handle the successful response
+        this.prediction = response.data.prediction
+        console.log('Sent image for prediction')
+        console.log('Received prediction:', response.data)
+        // alert('Image sent for inference successfully')
       } catch (error) {
         // Handle errors (e.g., show an error message)
         console.error('Error sending image:', error)
         alert('Failed to send image. Please try again.')
       }
+    },
+    resetCanvas() {
+      this.$refs.VueCanvasDrawing.reset()
+      this.prediction = null
+      this.image = null
     },
   },
 }
@@ -213,7 +221,7 @@ export default {
             </svg>
             Refresh
           </button>
-          <button type="button" @click.prevent="$refs.VueCanvasDrawing.reset()">
+          <button type="button" @click.prevent="resetCanvas">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               width="16"
@@ -368,6 +376,9 @@ export default {
       <div class="output">
         <p>Your image:</p>
         <img :src="image" style="border: solid 1px #000000" />
+        <div v-if="prediction">
+          <p>Prediction for this digit: {{ prediction }}</p>
+        </div>
       </div>
     </div>
   </div>
