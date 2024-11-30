@@ -5,16 +5,15 @@ import HelloWorld from './components/HelloWorld.vue'
 
 <template>
   <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
+    <!--
+    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" /> -->
 
     <div class="wrapper">
-      <HelloWorld msg="You did it!" />
+      <HelloWorld msg="welcome to digitAI service" />
 
       <nav>
-        <RouterLink to="/">Home</RouterLink>
+        <RouterLink to="/">Canvas</RouterLink>
         <RouterLink to="/about">About</RouterLink>
-        <RouterLink to="/ping">Ping!</RouterLink>
-        <RouterLink to="/canvas">Canvas</RouterLink>
       </nav>
     </div>
   </header>

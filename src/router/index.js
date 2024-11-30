@@ -8,8 +8,8 @@ const router = createRouter({
   routes: [
     {
       path: '/',
-      name: 'home',
-      component: HomeView,
+      name: 'canvas',
+      component: Canvas,
     },
     {
       path: '/about',
@@ -19,16 +19,16 @@ const router = createRouter({
       // which is lazy-loaded when the route is visited.
       component: () => import('../views/AboutView.vue'),
     },
-    {
-      path: '/ping',
-      name: 'ping',
-      component: Ping,
-    },
-    {
-      path: '/canvas',
-      name: 'canvas',
-      component: Canvas,
-    },
+    // {
+    //   path: '/ping',
+    //   name: 'ping',
+    //   component: Ping,
+    // },
+    // {
+    //   path: '/canvas',
+    //   name: 'canvas',
+    //   component: Canvas,
+    // },
   ],
 })
 

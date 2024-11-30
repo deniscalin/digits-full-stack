@@ -1,6 +1,11 @@
 <template>
   <div class="about">
-    <h1>This is an about page</h1>
+    <p>
+      This is handdrawn digit recognition service for digits [0-9]. More details here:
+      <a href="https://github.com/deniscalin/digits-full-stack" target="_blank" rel="noopener"
+        >https://github.com/deniscalin/digits-full-stack</a
+      >
+    </p>
   </div>
 </template>
 
