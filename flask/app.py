@@ -11,9 +11,6 @@ app.config.from_object(__name__)
 # Enable CORS
 CORS(app, resources={r'/*': {'origins': '*'}})
 
-# For testing
-predictions = [1, 2, 3, 4, 5, 6, 7, 8, 9]
-
 
 def base64_to_bytes(base64_str, output_file_path = None):
     """Converts base64 string into a bytes object and saves it on disk"""
@@ -42,15 +39,18 @@ def predict():
     # print("Got image in base64 format: ", image_bs64)
     # print('base64 image type: ', type(image_bs64))
     base64_to_bytes(image_bs64, 'img_buffer_dir/digit.png')
-    img_tensor = prepare_image('img_buffer_dir')
+    img_tensor = prepare_image('img_buffer_dir/digit.png')
     ix, conf_score = inference_function(img_tensor)
+    print("Prediction: ", ix)
+    print("Confidence score: ", conf_score)
     
 
     # Start constructing the response obj
     response_obj = {'status': 'success'}
     response_obj['message'] = 'Received your request data!'
     # Return a prediction
-    response_obj['prediction'] = predictions[0]
+    response_obj['prediction'] = ix
+    response_obj['conf_score'] = conf_score
     return jsonify(response_obj)
 
 if __name__ == '__main__':

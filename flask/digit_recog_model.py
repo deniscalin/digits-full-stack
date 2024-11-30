@@ -19,8 +19,8 @@ g = torch.manual_seed(global_seed)
 class Linear:
     
     def __init__(self, fan_in, fan_out, param_1, param_2, bias=True):
-        self.weight = torch.randn((fan_in, fan_out), generator=g, device=device) / (fan_in**0.5)
-        self.bias = torch.zeros((fan_out), device=device) if bias else None
+        self.weight = param_1
+        self.bias = param_2
         
     def __call__(self, x):
         self.out = x @ self.weight
@@ -34,16 +34,16 @@ class Linear:
 
 class BatchNorm1d:
     
-    def __init__(self, dim, param_1, param_2, eps=1e-5, momentum=0.1):
+    def __init__(self, dim, param_1, param_2, param_3, param_4, eps=1e-5, momentum=0.1):
         self.eps = eps
         self.momentum = momentum
         self.training = False
         # Trained parameters
-        self.gamma = torch.ones(dim, device=device)
-        self.beta = torch.zeros(dim, device=device)
+        self.gamma = param_1
+        self.beta = param_2
         # Buffers (trained with momentum update)
-        self.running_mean = torch.zeros(dim, device=device)
-        self.running_var = torch.ones(dim, device=device)
+        self.running_mean = param_3
+        self.running_var = param_4
         
     def __call__(self, x):
         # Calculate the forward pass
@@ -63,7 +63,7 @@ class BatchNorm1d:
         return self.out
     
     def parameters(self):
-        return [self.gamma, self.beta]
+        return [self.gamma, self.beta, self.running_mean, self.running_var]
     
     
 class Tanh:
@@ -86,29 +86,33 @@ class ReLU:
         return []
     
 
-# Printing parameter shapes:  
-# [torch.Size([784, 512]), torch.Size([512]), torch.Size([512]), torch.Size([512]), 
-#  torch.Size([512, 256]), torch.Size([256]), torch.Size([256]), torch.Size([256]), 
-#  torch.Size([256, 128]), torch.Size([128]), torch.Size([128]), torch.Size([128]), 
-#  torch.Size([128, 64]), torch.Size([64]), torch.Size([64]), torch.Size([64]), 
-#  torch.Size([64, 10]), torch.Size([10]), torch.Size([10]), torch.Size([10])]
+# Printing new parameter shapes:  
+# [torch.Size([784, 512]), torch.Size([512]), torch.Size([512]), torch.Size([512]), torch.Size([1, 512]), torch.Size([1, 512]), 
+# torch.Size([512, 256]), torch.Size([256]), torch.Size([256]), torch.Size([256]), torch.Size([1, 256]), torch.Size([1, 256]), 
+# torch.Size([256, 128]), torch.Size([128]), torch.Size([128]), torch.Size([128]), torch.Size([1, 128]), torch.Size([1, 128]), 
+# torch.Size([128, 64]), torch.Size([64]), torch.Size([64]), torch.Size([64]), torch.Size([1, 64]), torch.Size([1, 64]), 
+# torch.Size([64, 10]), torch.Size([10]), torch.Size([10]), torch.Size([10]), torch.Size([1, 10]), torch.Size([1, 10])]
     
 print("Preparing to load weights")
-loaded_model: dict = torch.load('/Users/deniscalin/Desktop/digit_recognizer_frontend/digit-recognizer-front-end/flask/model_300k_params.pt')
+loaded_model: dict = torch.load('/Users/deniscalin/Desktop/digit_recognizer_frontend/digit-recognizer-front-end/flask/patched_layers_300k.pt')
 print("Loaded weights, setting layers")
-p = loaded_model['params']
+layers = loaded_model['patched_layers']
+
+# print("Preparing to load weights")
+# loaded_model: dict = torch.load('/Users/deniscalin/Desktop/digit_recognizer_frontend/digit-recognizer-front-end/flask/model_300k_params.pt')
+# print("Loaded weights, setting layers")
+# p = loaded_model['params']
+
+# layers = [
+#             Linear(784, 512, p[0], p[1]),       BatchNorm1d(512, p[2], p[3], p[4], p[5]), ReLU(),
+#             Linear(512, 256, p[6], p[7]),       BatchNorm1d(256, p[8], p[9], p[10], p[11]), ReLU(),
+#             Linear(256, 128, p[12], p[13]),       BatchNorm1d(128, p[14], p[15], p[16], p[17]), ReLU(),
+#             Linear(128, 64, p[18], p[19]),        BatchNorm1d(64, p[20], p[21], p[22], p[23]),  ReLU(),
+#             Linear(64, vocab_size, p[24], p[25]), BatchNorm1d(vocab_size, p[26], p[27], p[28], p[29])
+#         ]
 
 
-layers = [
-            Linear(784, 512, p[0], p[1]),       BatchNorm1d(512, p[2], p[3]), ReLU(),
-            Linear(512, 256, p[4], p[5]),       BatchNorm1d(256, p[6], p[7]), ReLU(),
-            Linear(256, 128, p[8], p[9]),       BatchNorm1d(128, p[10], p[11]), ReLU(),
-            Linear(128, 64, p[12], p[13]),        BatchNorm1d(64, p[14], p[15]),  ReLU(),
-            Linear(64, vocab_size, p[16], p[17]), BatchNorm1d(vocab_size, p[18], p[19])
-        ]
-
-
-# Set BatchNorm layers to inference mode
+# # Set BatchNorm layers to inference mode
 for layer in layers:
     if isinstance(layer, BatchNorm1d):
         print(layer)
@@ -116,6 +120,9 @@ for layer in layers:
         print("Set BatchNorm1D training to false")
     print(layer)
 
+# model_obj = {'patched_layers': layers}
+
+# torch.save(model_obj, 'patched_layers_300k.pt')
 
 @torch.no_grad()
 def inference_function(x_batch):
