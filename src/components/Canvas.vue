@@ -119,8 +119,8 @@ export default {
         <vue-drawing-canvas
           ref="VueCanvasDrawing"
           v-model:image="image"
-          :width="600"
-          :height="400"
+          :width="400"
+          :height="250"
           :stroke-type="strokeType"
           :line-cap="lineCap"
           :line-join="lineJoin"
@@ -144,6 +144,7 @@ export default {
           x-axis: <strong>{{ x }}</strong
           >, y-axis: <strong>{{ y }}</strong>
         </p>
+        <p>For better predictions, try to draw your digit in the middle of the canvas.</p>
         <div class="button-container">
           <button type="button" @click="SendForInference">Get prediction</button>
           <button type="button" @click.prevent="disabled = !disabled">
