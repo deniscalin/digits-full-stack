@@ -2,7 +2,7 @@
 
 Use the canvas to draw the image on the front end, the backend returns a label prediction from a trained ML model.
 
-**Model specifics:** this is a 5-layer MLP model with Kaiming init and a ReLU activation. The classes are implemented from scratch using `torch.tensor` objects (not inhereting from nn.Module). The model has been trained for 300k steps, each step looking at 128 batch size (a `128 by 784 tensor`).
+**Model specifics:** this is a 5-layer MLP model with Kaiming init and a ReLU activation. The classes are implemented from scratch using `torch.tensor` objects (not inhereting from nn.Module). This low-level implementation in pure torch.tensors has been inspired by [Andrej Karpathy's amazing series of videos](https://www.youtube.com/watch?v=P6sfmUTpUmc), which I adapted for sequence classification and digit recognition. The model has been trained for 300k steps, each step looking at 128 batch size (a `128 by 784 tensor`).
 
 The model achieves a `~97.4% accuracy` score on unseen data after 40k runs on the eval set.
 
