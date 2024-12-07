@@ -119,8 +119,8 @@ export default {
         <vue-drawing-canvas
           ref="VueCanvasDrawing"
           v-model:image="image"
-          :width="400"
-          :height="250"
+          :width="448"
+          :height="448"
           :stroke-type="strokeType"
           :line-cap="lineCap"
           :line-join="lineJoin"
